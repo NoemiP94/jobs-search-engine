@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import Job from './Job'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getMainSearchAction } from '../redux/actions'
 
-const MainSearch = (jobs) => {
+const MainSearch = () => {
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
 
@@ -14,10 +14,13 @@ const MainSearch = (jobs) => {
   }
 
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getMainSearchAction())
-  })
 
+  const searchResultsFromRedux = useSelector((state) => state.search.content)
+
+  const handleSumbit = async (e) => {
+    e.preventDefault()
+    dispatch(getMainSearchAction(query))
+  }
   return (
     <Container>
       <Row>
@@ -26,7 +29,7 @@ const MainSearch = (jobs) => {
           <Button onClick={() => navigate('/favourites')}>Favourites</Button>
         </Col>
         <Col xs={10} className="mx-auto">
-          <Form onSubmit={getMainSearchAction}>
+          <Form onSubmit={handleSumbit}>
             <Form.Control
               type="search"
               value={query}
@@ -36,7 +39,7 @@ const MainSearch = (jobs) => {
           </Form>
         </Col>
         <Col xs={10} className="mx-auto mb-5">
-          {jobs.map((jobData) => (
+          {searchResultsFromRedux.map((jobData) => (
             <Job key={jobData._id} data={jobData} />
           ))}
         </Col>

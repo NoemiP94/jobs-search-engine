@@ -2,6 +2,7 @@ export const ADD_TO_FAVOURITE = 'ADD_TO_FAVOURITE'
 export const REMOVE_FROM_FAVOURITE = 'REMOVE_FROM_FAVOURITE'
 export const GET_MAIN_SEARCH = 'GET_MAIN_SEARCH'
 export const GET_COMPANY_RESULTS = 'GET_COMPANY_RESULTS'
+const baseEndpoint = 'https://strive-benchmark.herokuapp.com/api/jobs?company='
 
 export const removeFromFavouriteAction = (fav) => {
   return {
@@ -10,24 +11,29 @@ export const removeFromFavouriteAction = (fav) => {
   }
 }
 
-export const addToFavouriteAction = (data) => {
+export const addToFavouriteAction = (companyName) => {
   return {
     type: ADD_TO_FAVOURITE,
-    payload: data.company_name,
+    payload: companyName,
   }
 }
 
-export const getMainSearchAction = (params) => {
-  const baseEndpoint =
-    'https://strive-benchmark.herokuapp.com/api/jobs?company='
+export const removeCompanyFromFavouriteAction = (companyName) => {
+  return {
+    type: REMOVE_FROM_FAVOURITE,
+    payload: companyName,
+  }
+}
+
+export const getMainSearchAction = (query) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(baseEndpoint + params.companyName)
+      const response = await fetch(baseEndpoint + query + '&limit=20')
       if (response.ok) {
-        let fetchedMainSearch = await response.json()
+        const { data } = await response.json()
         dispatch({
           type: GET_MAIN_SEARCH,
-          payload: fetchedMainSearch,
+          payload: data,
         })
       } else {
         alert('Error fetching results')
@@ -38,17 +44,17 @@ export const getMainSearchAction = (params) => {
   }
 }
 
-export const getCompanySearchResultsAction = (params) => {
+export const getCompanySearchResultsAction = (query) => {
   const baseEndpoint =
     'https://strive-benchmark.herokuapp.com/api/jobs?company='
   return async (dispatch) => {
     try {
-      const response = await fetch(baseEndpoint + params.companyName)
+      const response = await fetch(baseEndpoint + query + '&limit=20')
       if (response.ok) {
-        let fetchedCompanyResults = await response.json()
+        let { data } = await response.json()
         dispatch({
           type: GET_COMPANY_RESULTS,
-          payload: fetchedCompanyResults,
+          payload: data,
         })
       } else {
         alert('Error fetching results')

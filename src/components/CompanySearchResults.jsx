@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import Job from './Job'
 import { getCompanySearchResultsAction } from '../redux/actions'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-const CompanySearchResults = (jobs) => {
+const CompanySearchResults = () => {
   const dispatch = useDispatch()
-
+  const searchResultsFromRedux = useSelector((state) => state.search.content)
   useEffect(() => {
     dispatch(getCompanySearchResultsAction())
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -16,7 +16,7 @@ const CompanySearchResults = (jobs) => {
     <Container>
       <Row>
         <Col>
-          {jobs.map((jobData) => (
+          {searchResultsFromRedux.map((jobData) => (
             <Job key={jobData._id} data={jobData} />
           ))}
         </Col>

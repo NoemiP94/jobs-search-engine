@@ -1,7 +1,7 @@
 // qua quello della fetch
 import { GET_COMPANY_RESULTS, GET_MAIN_SEARCH } from '../actions'
 const initialState = {
-  jobs: [],
+  content: [],
 }
 
 const searchReducer = (state = initialState, action) => {
@@ -9,12 +9,12 @@ const searchReducer = (state = initialState, action) => {
     case GET_MAIN_SEARCH:
       return {
         ...state,
-        jobs: action.payload,
+        content: action.payload,
       }
     case GET_COMPANY_RESULTS:
       return {
-        ...state.jobs,
-        jobs: action.payload,
+        ...state.content,
+        content: action.payload,
       }
     default:
       return state
